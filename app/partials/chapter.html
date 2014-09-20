@@ -10,12 +10,7 @@
 </head>
 <body>
 	<div class="snap-drawer">
-		<h3>Turtles</h3>
-<ul>
-	<li><a href="index.html">Cover</a></li>
-	<li><a href="01-what-is-data.html">1: What is Data?</a></li>
-</ul>
-
+		{{ contents }}
 	</div>
 	<div id="page">
 		<div class="header-wrapper">
@@ -25,14 +20,8 @@
 			</div>
 		</div>
 		<div class="container">
-			<section id="cover">
-				<div id="cover-background"></div>
-				<div id="cover-tagline">
-					<h1>Turtles</h1>
-				</div>
-			</section>
 			<div class="content">
-				<p>Some stuff will go here eventually.</p>
+				{{ content }}
 			</div>
 		</div>
 	</div>

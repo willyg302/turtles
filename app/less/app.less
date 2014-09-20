@@ -15,7 +15,7 @@ img {
 	max-width: 100%;
 }
 
-.snap-content {
+#page {
 	position: absolute;
 	top: 0;
 	right: 0;
@@ -120,7 +120,11 @@ img {
 	}
 }
 
-.cd-container {
+.container {
+	margin-top: @header-height;
+}
+
+.content {
 	.clearfix();
 	width: 90%;
 	max-width: @content-width;
@@ -131,8 +135,6 @@ img {
 #cover {
 	position: relative;
 	height: 300px;
-	margin-top: 50px;
-	z-index: 1;
 
 	#cover-background {
 		width: 100%;
@@ -149,7 +151,6 @@ img {
 		right: auto;
 		text-align: center;
 	}
-
 
 	h1 {
 		text-align: center;

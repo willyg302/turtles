@@ -1,5 +1,5 @@
 var snapper = new Snap({
-	element: document.getElementById('content'),
+	element: document.getElementById('page'),
 	disable: 'right',
 	hyperextensible: false
 });

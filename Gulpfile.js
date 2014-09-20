@@ -46,16 +46,14 @@ gulp.task('compile-css', function() {
 });
 
 gulp.task('convert', function() {
-	/*
-	return gulp.src(paths.app + "/posts/*.md")
+	return gulp.src(paths.app + "/chapters/*.md")
 		.pipe(markdown({
 			gfm: true,
 			highlight: function(code) {
 				return require('highlight.js').highlightAuto(code).value;
 			}
 		}))
-		.pipe(gulp.dest(paths.dist + "/posts"))
-	*/
+		.pipe(gulp.dest(paths.dist));
 });
 
 gulp.task('download-highlight', ['copy-assets'], function() {
