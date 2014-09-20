@@ -15,12 +15,6 @@ img {
 	max-width: 100%;
 }
 
-
-
-
-
-
-
 .snap-content {
 	position: absolute;
 	top: 0;
@@ -37,7 +31,6 @@ img {
 	background-color: @color-background;
 }
 
-
 .snap-drawer {
 	position: absolute;
 	top: 0;
@@ -52,12 +45,14 @@ img {
 	.transition(width 0.3s ease);
 
 	background-color: @color-sidebar;
-	color: #eee;
+	color: @color-font;
 
 	h3 {
 		font-size: 36px;
 		font-weight: normal;
-		margin: 15px;
+		margin: 0;
+		padding: 15px;
+		border-bottom: 1px solid @color-sidebar-div;
 	}
 
 	ul {
@@ -72,11 +67,13 @@ img {
 		padding: 15px;
 		font-weight: bold;
 		text-decoration: none;
-		color: #ccc;
+		color: @color-font;
+
+		&:hover {
+			background-color: @color-sidebar-hover;
+		}
 	}
 }
-
-
 
 .header-wrapper {
 	position: fixed;
@@ -123,15 +120,6 @@ img {
 	}
 }
 
-
-
-
-
-
-
-
-
-
 .cd-container {
 	.clearfix();
 	width: 90%;
@@ -139,8 +127,6 @@ img {
 	margin: 0 auto;
 	margin-bottom: @font-size-base;
 }
-
-
 
 #cover {
 	position: relative;
@@ -151,10 +137,9 @@ img {
 	#cover-background {
 		width: 100%;
 		height: 100%;
-		background: url("../img/background.jpg") no-repeat center center;
+		background: url("../img/landscape.jpg") no-repeat center center;
 		background-size: cover;
 	}
-
 
 	#cover-tagline {
 		position: absolute;
