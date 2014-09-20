@@ -1,0 +1,177 @@
+*,
+*:after,
+*::before {
+	.box-sizing(border-box);
+}
+
+body {
+	margin: 0;
+	padding: 0;
+	color: @color-font;
+	font-family: @font;
+}
+
+img {
+	max-width: 100%;
+}
+
+
+
+
+
+
+
+.snap-content {
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	width: auto;
+	height: auto;
+	z-index: 2;
+	overflow: auto;
+	-webkit-overflow-scrolling: touch;
+
+	.translate3d(0, 0, 0);
+	background-color: @color-background;
+}
+
+
+.snap-drawer {
+	position: absolute;
+	top: 0;
+	right: auto;
+	bottom: 0;
+	left: 0;
+	z-index: 1;
+	width: 265px;
+	height: auto;
+	overflow: auto;
+	-webkit-overflow-scrolling: touch;
+	.transition(width 0.3s ease);
+
+	background-color: @color-sidebar;
+	color: #eee;
+
+	h3 {
+		font-size: 36px;
+		font-weight: normal;
+		margin: 15px;
+	}
+
+	ul {
+		padding: 0;
+		margin: 0;
+		list-style-type: none;
+	}
+
+	li > a {
+		display: block;
+		border-bottom: 1px solid @color-sidebar-div;
+		padding: 15px;
+		font-weight: bold;
+		text-decoration: none;
+		color: #ccc;
+	}
+}
+
+
+
+.header-wrapper {
+	position: fixed;
+	z-index: 10;
+}
+
+.header {
+	.clearfix();
+
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: @header-height;
+	background: @color-background;
+
+	h4 {
+		text-align: center;
+		position: relative;
+		font-size: 20px;
+
+		span {
+			opacity: 0.5;
+		}
+	}
+}
+
+#menu {
+	position: absolute;
+	padding-left: 1.25em;
+	font-size: 24px;
+	top: 11px;
+	left: 16px;
+
+	&:before {
+		content: '';
+		position: absolute;
+		top: 0.25em;
+		left: 0;
+		width: 1em;
+		height: 0.625em;
+		border-top: 0.375em double @color-font;
+		border-bottom: 0.125em solid @color-font;
+	}
+}
+
+
+
+
+
+
+
+
+
+
+.cd-container {
+	.clearfix();
+	width: 90%;
+	max-width: @content-width;
+	margin: 0 auto;
+	margin-bottom: @font-size-base;
+}
+
+
+
+#cover {
+	position: relative;
+	height: 300px;
+	margin-top: 50px;
+	z-index: 1;
+
+	#cover-background {
+		width: 100%;
+		height: 100%;
+		background: url("../img/background.jpg") no-repeat center center;
+		background-size: cover;
+	}
+
+
+	#cover-tagline {
+		position: absolute;
+		width: 100%;
+		top: 50%;
+		bottom: auto;
+		right: auto;
+		text-align: center;
+	}
+
+
+	h1 {
+		text-align: center;
+		color: @color-white;
+	}
+
+	@media only screen and (min-width: 1170px) {
+		height: 500px;
+	}
+}

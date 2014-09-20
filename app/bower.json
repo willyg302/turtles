@@ -1,0 +1,9 @@
+{
+  "name": "turtles",
+  "version": "0.1.0",
+  "dependencies": {
+    "bootstrap": "~3.2.0",
+    "snapjs": "~1.9.3"
+  },
+  "devDependencies": {}
+}
