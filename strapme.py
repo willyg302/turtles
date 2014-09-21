@@ -15,24 +15,32 @@ def _load_partial(name):
 	with open(os.path.join('app', 'partials', '{}.html'.format(name)), 'r') as f:
 		return f.read()
 
-def _shim_dist_html(name, writef):
+def _shim_dist_html(base, name, shim):
 	with open(os.path.join('dist', name), 'r+') as f:
 		data = f.read()
 		f.seek(0)
-		writef(f, data)
+		for k, v in shim.iteritems():
+			base = base.replace("{{ " + k + " }}", v)
+		f.write(base.replace('{{ content }}', data))
 		f.truncate()
 
 def generate_book():
 	'''Generate book'''
+	base = _load_partial('base')
 	contents = _load_partial('contents')
-	chapter = _load_partial('chapter')
-	# Shim contents into index.html
-	_shim_dist_html('index.html', lambda f, data: f.write(data.replace('{{ contents }}', contents)))
+	# Handle special case of index.html
+	_shim_dist_html(base, 'index.html', {
+		'contents': contents,
+		'header': _load_partial('cover')
+	})
 	# Process chapters
 	for filename in os.listdir('dist'):
 		if filename.startswith('index') or not filename.endswith('.html'):
 			continue
-		_shim_dist_html(filename, lambda f, data: f.write(chapter.replace('{{ contents }}', contents).replace('{{ content }}', data)))
+		_shim_dist_html(base, filename, {
+			'contents': contents,
+			'header': ''
+		})
 
 def publish():
 	'''Publish Turtles'''

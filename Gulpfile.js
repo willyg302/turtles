@@ -12,8 +12,7 @@ var request = require('request');
 var paths = {
 	assets: [
 		'./app/img/**/*.*',
-		'./app/.nojekyll',
-		'./app/index.html'
+		'./app/.nojekyll'
 	],
 	app: './app',
 	dist: './dist',
@@ -49,6 +48,7 @@ gulp.task('convert', function() {
 	return gulp.src(paths.app + "/chapters/*.md")
 		.pipe(markdown({
 			gfm: true,
+			smartypants: true,
 			highlight: function(code) {
 				return require('highlight.js').highlightAuto(code).value;
 			}
