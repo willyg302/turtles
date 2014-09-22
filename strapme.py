@@ -1,4 +1,5 @@
 import os
+import re
 
 
 project = 'Turtles'
@@ -15,9 +16,23 @@ def _load_partial(name):
 	with open(os.path.join('app', 'partials', '{}.html'.format(name)), 'r') as f:
 		return f.read()
 
+def _replace_colors(data):
+	# Highlight every instance of the SMART conjecture to set it apart
+	colors = {
+		'stream': '1a4f63',
+		'maintain': '068f86',
+		'analyze': '6fd57f',
+		'represent': 'fcb03c',
+		'transform': 'fc5b3f'
+	}
+	for k, v in colors.iteritems():
+		pattern = re.compile('({})'.format(k), re.IGNORECASE)
+		data = pattern.sub('<span style="color: #{};">\\1</span>'.format(v), data)
+	return data
+
 def _shim_dist_html(base, name, shim):
 	with open(os.path.join('dist', name), 'r+') as f:
-		data = f.read()
+		data = _replace_colors(f.read())
 		f.seek(0)
 		for k, v in shim.iteritems():
 			base = base.replace("{{ " + k + " }}", v)
