@@ -11,17 +11,19 @@ For the moment, let us disregard the possibility that Mr. Watson simply overhear
 
 <small>Alexander Graham Bell's lab notebook, March 10, 1876.</small>
 
-March 10, 1876, was a special day because it marked the first time that humans captured sound and transformed it into an electrical signal. For the first time, we were able to transmit audio data at longer distances than an earshot.
+March 10, 1876, was a special day because it marked the first time that humans captured sound and transformed it into an electrical signal. For the first time, we were able to transmit audio data at distances longer than an earshot.
 
 Nowadays the telephone is ubiquitous. As of [January 2014](http://www.pewinternet.org/fact-sheets/mobile-technology-fact-sheet/), 90% of American adults own a cell phone, translating to about [3 billion](http://www.texasinsider.org/3-billion-phone-calls-made-in-us-every-day/) phone calls every day. That's over 30000 phone calls every *second*. Imagine all those calls, all those signals -- all that *data* -- [flying around](http://www.telcomhistory.org/vm/scienceLongDistance.shtml) us every second of every day. And that's not even including all the other ways that we communicate.
 
 We are literally (yes, [literally](http://theoatmeal.com/comics/literally)) immersed in data. Drowning in it, if one prefers the macabre. Data is all around us in a dizzying array of forms, constant, inescapable. Strange, then, that we think so little about data and what it means to us. Just what *is* data?
 
 
-## Data is Objective
-
-<!--"Big bird" example. What qualifies as "big"? In this case the data is "big" and it is describing "bird". However if the data is "big bird" as a whole, then it is a string (or a proper name, in the case of Big Bird).-->
+<!-- Bulleted list of data definitions from online-->
 
 ## Data is an Abstraction
 
 <!--Money example. We use money to buy material things. Before money, we traded. Money was an abstraction for material worth, a way of storing information about how much a person "owned". Abstractions can be compounded, which is why we now have digital currency, etc.-->
+
+## Data is Objective
+
+<!--"Big bird" example. What qualifies as "big"? In this case the data is "big" and it is describing "bird". However if the data is "big bird" as a whole, then it is a string (or a proper name, in the case of Big Bird).-->

@@ -1,3 +1,5 @@
+// Generic overrides
+
 *,
 *:after,
 *::before {
@@ -18,6 +20,12 @@ img {
 blockquote {
 	font-style: italic;
 }
+
+.embed-responsive {
+	margin-bottom: 10px;
+}
+
+// Specific theming
 
 #page {
 	position: absolute;
@@ -42,7 +50,7 @@ blockquote {
 	bottom: 0;
 	left: 0;
 	z-index: 1;
-	width: 265px;
+	width: @sidebar-width;
 	height: auto;
 	overflow: auto;
 	-webkit-overflow-scrolling: touch;
@@ -52,16 +60,14 @@ blockquote {
 	color: @color-font;
 
 	h3 {
-		font-size: 36px;
-		font-weight: normal;
 		margin: 0;
 		padding: 15px;
 		border-bottom: 1px solid @color-sidebar-div;
 	}
 
 	ul {
-		padding: 0;
 		margin: 0;
+		padding: 0;
 		list-style-type: none;
 	}
 
@@ -86,7 +92,6 @@ blockquote {
 
 .header {
 	.clearfix();
-
 	position: fixed;
 	top: 0;
 	left: 0;
@@ -97,7 +102,6 @@ blockquote {
 	h4 {
 		text-align: center;
 		position: relative;
-		font-size: 20px;
 
 		span {
 			opacity: 0.5;
@@ -138,13 +142,13 @@ blockquote {
 
 #cover {
 	position: relative;
-	height: 300px;
+	height: @cover-default-height;
 	margin-bottom: @font-size-base;
 
 	#cover-background {
 		width: 100%;
 		height: 100%;
-		background: url("../img/landscape.jpg") no-repeat center center;
+		background: @cover-image no-repeat center center;
 		background-size: cover;
 	}
 
@@ -162,7 +166,7 @@ blockquote {
 		color: @color-white;
 	}
 
-	@media only screen and (min-width: 1170px) {
-		height: 500px;
+	@media only screen and (min-width: @wide-breakpoint) {
+		height: @cover-height;
 	}
 }

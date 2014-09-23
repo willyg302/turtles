@@ -4,6 +4,7 @@ var concat     = require('gulp-concat');
 var less       = require('gulp-less');
 var markdown   = require('gulp-markdown');
 var minifycss  = require('gulp-minify-css');
+var replace    = require('gulp-replace');
 var uglify     = require('gulp-uglify');
 
 var fs = require('fs');
@@ -44,8 +45,21 @@ gulp.task('compile-css', function() {
 		.pipe(gulp.dest(paths.dist + "/css"));
 });
 
+var replaceSmart = function(s) {
+	// base16 Default
+	colors = {
+		'stream': 'ac4142',
+		'maintain': 'd28445',
+		'analyze': '90a959',
+		'represent': '6a9fb5',
+		'transform': 'aa759f'
+	};
+	return '<span style="color: #' + colors[s.toLowerCase()] + ';">' + s + '</span>';
+};
+
 gulp.task('convert', function() {
 	return gulp.src(paths.app + "/chapters/*.md")
+		.pipe(replace(/(stream|maintain|analyze|represent|transform)/gi, replaceSmart))
 		.pipe(markdown({
 			gfm: true,
 			smartypants: true,

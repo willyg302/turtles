@@ -4,6 +4,7 @@ var snapper = new Snap({
 	hyperextensible: false
 });
 
-document.getElementById('menu').addEventListener('click', function() {
+document.getElementById('menu').addEventListener('click', function(e) {
+	e.preventDefault();
 	snapper.open('left');
 });
