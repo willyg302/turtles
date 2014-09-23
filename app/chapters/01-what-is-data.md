@@ -27,3 +27,7 @@ We are literally (yes, [literally](http://theoatmeal.com/comics/literally)) imme
 ## Data is Objective
 
 <!--"Big bird" example. What qualifies as "big"? In this case the data is "big" and it is describing "bird". However if the data is "big bird" as a whole, then it is a string (or a proper name, in the case of Big Bird).-->
+
+## Data is Intangible
+
+<!--The distributed example, where a single piece of data can exist in several distant places at once, in different forms. Data is not bound by a physical system.-->

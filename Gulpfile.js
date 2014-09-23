@@ -46,15 +46,7 @@ gulp.task('compile-css', function() {
 });
 
 var replaceSmart = function(s) {
-	// base16 Default
-	colors = {
-		'stream': 'ac4142',
-		'maintain': 'd28445',
-		'analyze': '90a959',
-		'represent': '6a9fb5',
-		'transform': 'aa759f'
-	};
-	return '<span style="color: #' + colors[s.toLowerCase()] + ';">' + s + '</span>';
+	return '<span class="' + s.toLowerCase() + '">' + s + '</span>';
 };
 
 gulp.task('convert', function() {

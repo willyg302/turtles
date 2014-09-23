@@ -33,10 +33,28 @@ However, there's a better example courtesy of a movie called *The Lord of the Ri
     </div>
 </div>
 
-The beacons are an example of a binary stream.
+The beacons are an example of a binary stream: either the beacons are lit (corresponding to a 1) or they're not (corresponding to a 0). When the first bit is flipped to a 1 on Gondor's end, it begins moving down the stream until it reaches Rohan: that's data in motion. Simple, right?
+
+Streams have several other important properties:
+
+- **Streams are finite**. They must have a beginning and an end. They also must have finite width, often called the *capacity* or *bandwidth*. The width of a stream may vary along its length; we say that its overall width is its [maximum flow](http://en.wikipedia.org/wiki/Maximum_flow_problem).
+- **Streams are linear**. This does not describe the physical shape of a stream, because in practice streams are usually anything but straight lines. Rather, this suggests that a stream has only one beginning and one end.
+- **Streams have direction** (indeed, for data to be moving it *must* have direction). We can therefore represent a stream as a vector going in either direction between its beginning and end.
+- **Streams are composable**. The end of one stream can be linked to the beginning of another. This is an extremely powerful concept that allows for the construction of *networks*.
+
+Try to apply these properties to the beacon example. Do all of them hold?
+
+A stream is the basic building block for interacting with data, and any time there is any notion of information transfer (for example, from this screen to your eyes) a stream is hard at work. Because they're so important, we shall revisit them in a later chapter and examine their properties in more detail.
 
 <!--
-Whenever data is moving, we say it is streaming. A stream is finite and linear. For example, when Alice and Bob are talking to each other, we say that there is a bidirectional stream of data between them. The data is whatever they're saying.-->
+Types of stream networks:
+
+Chain
+Fork
+Funnel
+Mux (funnel where only one input is forwarded)
+Demux (fork where only one input is sent to)
+-->
 
 ## Maintain
 

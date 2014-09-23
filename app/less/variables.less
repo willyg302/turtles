@@ -10,10 +10,48 @@
 @cover-image          : url("../img/landscape.jpg");
 @wide-breakpoint      : 1170px;
 
+// Solarized
+@base03  : #002b36;
+@base02  : #073642;
+@base01  : #586e75;
+@base00  : #657b83;
+@base0   : #839496;
+@base1   : #93a1a1;
+@base2   : #eee8d5;
+@base3   : #fdf6e3;
+@yellow  : #b58900;
+@orange  : #cb4b16;
+@red     : #dc322f;
+@magenta : #d33682;
+@violet  : #6c71c4;
+@blue    : #268bd2;
+@cyan    : #2aa198;
+@green   : #859900;
+
+// Bootstrap color overrides
+@gray-darker  : @base02;
+@gray-dark    : @base01;
+@gray         : @base00;
+@gray-light   : @base0;
+@gray-lighter : @base1;
+
+@brand-primary : @blue;
+@brand-success : @green;
+@brand-info    : @cyan;
+@brand-warning : @yellow;
+@brand-danger  : @red;
+
+@body-bg    : @base3;
+@text-color : @gray-darker;
+
+@link-color       : @brand-primary;
+@link-hover-color : darken(@link-color, 15%);
+
+@blockquote-border-color : @base2;
+@blockquote-small-color  : @base0;
+
 // Colors
 @color-white         : #ffffff;
-@color-sidebar       : #d7ccc8;
-@color-sidebar-div   : #bcaaa4;
-@color-sidebar-hover : #efebe9;
-@color-background    : #efebe9;
-@color-font          : #263238;
+@color-sidebar       : @base2;
+@color-sidebar-div   : @base1;
+@color-sidebar-hover : @body-bg;
