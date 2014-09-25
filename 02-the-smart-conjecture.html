@@ -36,15 +36,15 @@
 <p>By itself, data isn’t terribly interesting because it just exists — that is, it’s a noun rather than a verb. In order to be useful data must be acted upon.</p>
 <p>The SMART Conjecture states that there are only five things we can do to data:</p>
 <ul>
-<li><span style="color: #ac4142;">Stream</span> it</li>
-<li><span style="color: #d28445;">Maintain</span> it</li>
-<li><span style="color: #90a959;">Analyze</span> it</li>
-<li><span style="color: #6a9fb5;">Represent</span> it</li>
-<li><span style="color: #aa759f;">Transform</span> it</li>
+<li><span class="stream">Stream</span> it</li>
+<li><span class="maintain">Maintain</span> it</li>
+<li><span class="analyze">Analyze</span> it</li>
+<li><span class="represent">Represent</span> it</li>
+<li><span class="transform">Transform</span> it</li>
 </ul>
 <p>Together, these five actions provide all the tools we need to work with data. Let’s look at each of them in turn.</p>
-<h2 id="-span-style-color-ac4142-stream-span-"><span style="color: #ac4142;">Stream</span></h2>
-<p>A <span style="color: #ac4142;">stream</span> is data in motion. The concept can be illustrated in a very literal sense with a babbling brook weaving its way through a forest. Imagine stuffing little bits of information, written on pieces of paper, into tin cans and setting them afloat on the water: they’ll get carried along by the current and travel down<span style="color: #ac4142;">stream</span>. Where they’ll end up you do not know, but you can be certain that your little pieces of paper are going <em>somewhere</em>.</p>
+<h2 id="-span-class-stream-stream-span-"><span class="stream">Stream</span></h2>
+<p>A <span class="stream">stream</span> is data in motion. The concept can be illustrated in a very literal sense with a babbling brook weaving its way through a forest. Imagine stuffing little bits of information, written on pieces of paper, into tin cans and setting them afloat on the water: they’ll get carried along by the current and travel down<span class="stream">stream</span>. Where they’ll end up you do not know, but you can be certain that your little pieces of paper are going <em>somewhere</em>.</p>
 <p>However, there’s a better example courtesy of a movie called <em>The Lord of the Rings: The Return of the King</em>:</p>
 <div class="embed-responsive embed-responsive-16by9">
     <iframe width="560" height="315" src="http://www.youtube.com/embed/i6LGJ7evrAg?start=86" frameborder="0" allowfullscreen></iframe>
@@ -60,22 +60,47 @@
     </div>
 </div>
 
-<p>The beacons are an example of a binary <span style="color: #ac4142;">stream</span>.</p>
+<p>The beacons are an example of a binary <span class="stream">stream</span>: either the beacons are lit (corresponding to a 1) or they’re not (corresponding to a 0). When the first bit is flipped to a 1 on Gondor’s end, it begins moving down the <span class="stream">stream</span> until it reaches Rohan: that’s data in motion. Simple, right?</p>
+<p><span class="stream">Stream</span>s have several other important properties:</p>
+<ul>
+<li><strong><span class="stream">Stream</span>s are finite</strong>. They must have a beginning and an end. They also must have finite width, often called the <em>capacity</em> or <em>bandwidth</em>. The width of a <span class="stream">stream</span> may vary along its length; we say that its overall width is its <a href="http://en.wikipedia.org/wiki/Maximum_flow_problem">maximum flow</a>.</li>
+<li><strong><span class="stream">Stream</span>s are linear</strong>. This does not describe the physical shape of a <span class="stream">stream</span>, because in practice <span class="stream">stream</span>s are usually anything but straight lines. Rather, this suggests that a <span class="stream">stream</span> has only one beginning and one end.</li>
+<li><strong><span class="stream">Stream</span>s have direction</strong> (indeed, for data to be moving it <em>must</em> have direction). We can therefore <span class="represent">represent</span> a <span class="stream">stream</span> as a vector going in either direction between its beginning and end.</li>
+<li><strong><span class="stream">Stream</span>s are composable</strong>. The end of one <span class="stream">stream</span> can be linked to the beginning of another. This is an extremely powerful concept that allows for the construction of <em>networks</em>.</li>
+</ul>
+<p>Try to apply these properties to the beacon example. Do all of them hold?</p>
+<p>A <span class="stream">stream</span> is the basic building block for interacting with data, and any time there is any notion of information transfer (for example, from this screen to your eyes) a <span class="stream">stream</span> is hard at work. Because they’re so important, we shall revisit them in a later chapter and examine their properties in more detail.</p>
 <!--
-Whenever data is moving, we say it is <span style="color: #ac4142;">stream</span>ing. A <span style="color: #ac4142;">stream</span> is finite and linear. For example, when Alice and Bob are talking to each other, we say that there is a bidirectional <span style="color: #ac4142;">stream</span> of data between them. The data is whatever they're saying.-->
+Types of <span class="stream">stream</span> networks:
 
-<h2 id="-span-style-color-d28445-maintain-span-"><span style="color: #d28445;">Maintain</span></h2>
-<!--Data, by itself, decays (principle of entropy). We forget things. If something is written down, the paper yellows and the ink fades. Hard disks get corrupted. Thus we must expend energy to <span style="color: #d28445;">maintain</span> the data.-->
+Chain
+Fork
+Funnel
+Mux (funnel where only one input is forwarded)
+Demux (fork where only one input is sent to)
+-->
 
-<h2 id="-span-style-color-90a959-analyze-span-"><span style="color: #90a959;">Analyze</span></h2>
+<h2 id="-span-class-maintain-maintain-span-"><span class="maintain">Maintain</span></h2>
+<!--Data, by itself, decays (principle of entropy). We forget things. If something is written down, the paper yellows and the ink fades. Hard disks get corrupted. Thus we must expend energy to <span class="maintain">maintain</span> the data.-->
+
+<h2 id="-span-class-analyze-analyze-span-"><span class="analyze">Analyze</span></h2>
 <!--Data, by itself, does not "mean" anything. We draw meaning from data by analyzing it. For example, if a cup with a capacity of 100 mL currently contains 50 mL, we can say that it is either "half full" or "half empty". If a number is displayed as red, that usually has a bad connotation, but in some cultures red is good.-->
 
-<h2 id="-span-style-color-6a9fb5-represent-span-"><span style="color: #6a9fb5;">Represent</span></h2>
-<!--5, five, FIVE, 005, V, and 101 are all different <span style="color: #6a9fb5;">represent</span>ations of the number five. You can stretch what is a <span style="color: #6a9fb5;">represent</span>ation pretty far. Bar graphs, sculptures, different languages, art, etc. are all <span style="color: #6a9fb5;">represent</span>ations of data.-->
+<h2 id="-span-class-represent-represent-span-"><span class="represent">Represent</span></h2>
+<!--5, five, FIVE, 005, V, and 101 are all different <span class="represent">represent</span>ations of the number five. You can stretch what is a <span class="represent">represent</span>ation pretty far. Bar graphs, sculptures, different languages, art, etc. are all <span class="represent">represent</span>ations of data.-->
 
-<h2 id="-span-style-color-aa759f-transform-span-"><span style="color: #aa759f;">Transform</span></h2>
-<!--5 + 1 = 6. We have <span style="color: #aa759f;">transform</span>ed the number 5 into the number 6 by adding 1 to it. Note that this is **not** a change in <span style="color: #6a9fb5;">represent</span>ation, but a change in the underlying data itself, although the distinction between <span style="color: #6a9fb5;">represent</span>ation and data is very fuzzy (see below).-->
-<p><a href="01-what-is-data.html" class="btn btn-default" role="button">&larr; Previous</a></p>
+<h2 id="-span-class-transform-transform-span-"><span class="transform">Transform</span></h2>
+<!--5 + 1 = 6. We have <span class="transform">transform</span>ed the number 5 into the number 6 by adding 1 to it. Note that this is **not** a change in <span class="represent">represent</span>ation, but a change in the underlying data itself, although the distinction between <span class="represent">represent</span>ation and data is very fuzzy (see below).-->
+
+				<p class="booknav"><a href="01-what-is-data.html" class="btn btn-default" role="button">&larr; Previous</a></p>
+				<div class="panel panel-default text-muted small">
+	<div class="panel-body">
+		<h4>Colophon</h4>
+		<p>This book was made with &hearts; using <a href="http://www.google.com/fonts/specimen/Merriweather">Merriweather</a>, <a href="http://ethanschoonover.com/solarized">Solarized</a>, and <a href="http://getbootstrap.com/">Bootstrap</a>.</p>
+		<p>The source for this book is available on <a href="https://github.com/willyg302/turtles">GitHub</a>. Found a mistake? Submit an <a href="https://github.com/willyg302/turtles/issues">issue</a>!</p>
+	</div>
+</div>
+
 			</div>
 		</div>
 	</div>
