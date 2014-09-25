@@ -25,30 +25,32 @@ chapters = [
 def _process_chapter(base, index, name, shim):
 	with open(os.path.join('dist', name), 'r+') as f:
 		data = f.read()
-
+		# Create Previous/Next nav buttons
 		nav = ''
 		btn = '<a href="{}.html" class="btn {}" role="button">{}</a>'
 		if index != 0:
 			nav = nav + btn.format(chapters[index - 1], 'btn-default', '&larr; Previous')
 		if index != len(chapters) - 1:
 			nav = nav + btn.format(chapters[index + 1], 'btn-primary pull-right', 'Next &rarr;')
-
-		data = data + "<p>{}</p>".format(nav)
-
-		f.seek(0)
+		# Load standard shim contents and shove them into base
+		shim.update({
+			'contents': _load_partial('contents'),
+			'nav': '<p class="booknav">{}</p>'.format(nav),
+			'footer': _load_partial('footer'),
+			'content': data
+		})
 		for k, v in shim.iteritems():
 			base = base.replace("{{ " + k + " }}", v)
-		f.write(base.replace('{{ content }}', data))
+		# Write back to file
+		f.seek(0)
+		f.write(base)
 		f.truncate()
 
 def generate_book():
 	'''Generate book'''
 	base = _load_partial('base')
-	contents = _load_partial('contents')
-
 	for i, chapter in enumerate(chapters):
 		_process_chapter(base, i, chapter + ".html", {
-			'contents': contents,
 			'header': _load_partial('cover') if chapter == 'index' else ''
 		})
 
