@@ -11,6 +11,7 @@ var replace    = require('gulp-replace');
 var uglify     = require('gulp-uglify');
 
 var fs = require('fs');
+var merge = require('merge-stream');
 var request = require('request');
 
 var chapters = [
@@ -39,13 +40,48 @@ var paths = {
 	],
 	app: './app',
 	dist: './dist',
-	js: ['./app/bower_components/snapjs/snap.js', './app/js/app.js'],
-	less: './app/less/main.less'
+	tmp: './tmp',
+	js: {
+		'main.js': [
+			'./tmp/highlight.min.js',
+			'./app/bower_components/snapjs/snap.js',
+			'./app/js/app.js'
+		],
+		'cover.js': [
+			'./tmp/TweenLite.min.js',
+			'./tmp/EasePack.min.js',
+			'./tmp/rAF.js',
+			'./app/js/cover.js'
+		]
+	},
+	less: './app/less/main.less',
+	downloads: [
+		'http://yandex.st/highlightjs/8.0/styles/tomorrow.min.css',
+		'http://yandex.st/highlightjs/8.0/highlight.min.js',
+		'http://cdnjs.cloudflare.com/ajax/libs/gsap/latest/TweenLite.min.js',
+		'http://cdnjs.cloudflare.com/ajax/libs/gsap/latest/easing/EasePack.min.js',
+		'https://gist.githubusercontent.com/paulirish/1579671/raw/3d42a3a76ed09890434a07be2212f376959e616f/rAF.js'
+	]
 };
 
 gulp.task('clean', function() {
-	return gulp.src(paths.dist, {read: false})
+	return gulp.src([paths.dist, paths.tmp], {read: false})
 		.pipe(clean());
+});
+
+gulp.task('download-assets', ['clean'], function(cb) {
+	var complete = [];
+	fs.mkdirSync(paths.tmp);
+	for (var i = 0; i < paths.downloads.length; i++) {
+		var asset = paths.downloads[i];
+		var dest = paths.tmp + "/" + asset.split('/').pop();
+		request(asset).pipe(fs.createWriteStream(dest)).on('finish', function() {
+			complete.push(1);
+			if (complete.length === paths.downloads.length) {
+				cb();
+			}
+		});
+	}
 });
 
 gulp.task('copy-assets', function() {
@@ -54,17 +90,26 @@ gulp.task('copy-assets', function() {
 });
 
 gulp.task('compile-js', function() {
-	return gulp.src(paths.js)
-		.pipe(concat('main.js'))
-		.pipe(uglify())
-		.pipe(gulp.dest(paths.dist + "/js"));
+	var streams = [];
+	for (var k in paths.js) {
+		if (paths.js.hasOwnProperty(k)) {
+			streams.push(gulp.src(paths.js[k])
+				.pipe(concat(k))
+				.pipe(uglify())
+				.pipe(gulp.dest(paths.dist + "/js")));
+		}
+	}
+	return merge(streams);
 });
 
 gulp.task('compile-css', function() {
-	return gulp.src(paths.less)
+	var lessStream = gulp.src(paths.less)
 		.pipe(less())
 		.pipe(minifycss())
 		.pipe(gulp.dest(paths.dist + "/css"));
+	var tomorrowStream = gulp.src(paths.tmp + "/tomorrow.min.css", {base: paths.tmp})
+		.pipe(gulp.dest(paths.dist + "/css"));
+	return merge(lessStream, tomorrowStream);
 });
 
 var replaceSmart = function(s) {
@@ -82,13 +127,6 @@ gulp.task('convert', function() {
 			}
 		}))
 		.pipe(gulp.dest(paths.dist));
-});
-
-gulp.task('download-highlight', ['copy-assets'], function() {
-	request('http://yandex.st/highlightjs/8.0/styles/tomorrow.min.css')
-		.pipe(fs.createWriteStream(paths.dist + "/css/tomorrow.min.css"));
-	request('http://yandex.st/highlightjs/8.0/highlight.min.js')
-		.pipe(fs.createWriteStream(paths.dist + "/js/highlight.min.js"));
 });
 
 var getChapter = function(url, offset) {
@@ -125,6 +163,6 @@ gulp.task('generate-book', ['convert'], function() {
 		.pipe(gulp.dest('dist'));
 });
 
-gulp.task('default', ['clean'], function() {
-	gulp.start('copy-assets', 'compile-js', 'compile-css', 'convert', 'download-highlight', 'generate-book');
+gulp.task('default', ['download-assets'], function() {
+	gulp.start('copy-assets', 'compile-js', 'compile-css', 'generate-book');
 });
