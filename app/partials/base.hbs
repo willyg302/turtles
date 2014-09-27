@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
 <head>
 	<title>Turtles</title>
@@ -10,7 +10,12 @@
 </head>
 <body>
 	<div class="snap-drawer">
-		{{ contents }}
+		<h3>Turtles</h3>
+		<ul>
+			{{#each chapters}}
+				<li><a href="{{ this.url }}">{{ this.name }}</a></li>
+			{{/each}}
+		</ul>
 	</div>
 	<div id="page">
 		<div class="header-wrapper">
@@ -24,11 +29,25 @@
 			</div>
 		</div>
 		<div class="container">
-			{{ header }}
+			{{#if cover}}
+				<section id="cover">
+					<div id="cover-background"></div>
+					<div id="cover-tagline">
+						<h1>Turtles</h1>
+					</div>
+				</section>
+			{{/if}}
 			<div class="content">
-				{{ content }}
-				{{ nav }}
-				{{ footer }}
+				{{{ shim }}}
+				<p class="booknav">
+					{{#if previous}}
+						<a href="{{ previous.url }}" class="btn btn-default" role="button">&larr; Previous</a>
+					{{/if}}
+					{{#if next}}
+						<a href="{{ next.url }}" class="btn btn-primary pull-right" role="button">Next &rarr;</a>
+					{{/if}}
+				</p>
+				{{> partials/footer }}
 			</div>
 		</div>
 	</div>

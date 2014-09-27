@@ -1,14 +1,36 @@
 var gulp       = require('gulp');
 var clean      = require('gulp-clean');
+var handlebars = require('gulp-compile-handlebars');
 var concat     = require('gulp-concat');
+var foreach    = require('gulp-foreach');
 var less       = require('gulp-less');
 var markdown   = require('gulp-markdown');
 var minifycss  = require('gulp-minify-css');
+var rename     = require('gulp-rename');
 var replace    = require('gulp-replace');
 var uglify     = require('gulp-uglify');
 
 var fs = require('fs');
 var request = require('request');
+
+var chapters = [
+	{
+		url: 'index.html',
+		name: 'Cover'
+	},
+	{
+		url: '01-what-is-data.html',
+		name: '1: What is Data?'
+	},
+	{
+		url: '02-the-smart-conjecture.html',
+		name: '2: The SMART Conjecture'
+	},
+	{
+		url: '03-the-everywhere-problem.html',
+		name: '3: The Everywhere Problem'
+	}
+];
 
 var paths = {
 	assets: [
@@ -69,6 +91,40 @@ gulp.task('download-highlight', ['copy-assets'], function() {
 		.pipe(fs.createWriteStream(paths.dist + "/js/highlight.min.js"));
 });
 
+var getChapter = function(url, offset) {
+	for (var i = 0; i < chapters.length; i++) {
+		if (chapters[i].url === url) {
+			var index = i + offset;
+			if (index >= 0 && index < chapters.length) {
+				return chapters[index];
+			}
+			break;
+		}
+	}
+	return null;
+};
+
+gulp.task('generate-book', ['convert'], function() {
+	return gulp.src(paths.dist + "/*.html")
+		.pipe(foreach(function(stream, file) {
+			var templateData = {
+				cover: file.relative.indexOf('index') !== -1,
+				shim: file.contents.toString(),
+				chapters: chapters,
+				previous: getChapter(file.relative, -1),
+				next: getChapter(file.relative, 1)
+			};
+			var options = {
+				batch: [paths.app + "/partials"],
+				helpers: {}
+			};
+			return gulp.src(paths.app + "/partials/base.hbs")
+				.pipe(handlebars(templateData, options))
+				.pipe(rename(file.relative));
+		}))
+		.pipe(gulp.dest('dist'));
+});
+
 gulp.task('default', ['clean'], function() {
-	gulp.start('copy-assets', 'compile-js', 'compile-css', 'convert', 'download-highlight');
+	gulp.start('copy-assets', 'compile-js', 'compile-css', 'convert', 'download-highlight', 'generate-book');
 });
