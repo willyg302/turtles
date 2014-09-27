@@ -1,186 +1,317 @@
-(function() {
+/**
+ * Particleground
+ *
+ * @author Jonathan Nicol - @jnicol
+ * @version 1.0.1
+ * @description Creates a canvas-based particle system background
+ * @license The MIT License (MIT)
+ *
+ * Modified by @willyg302:
+ *   - Removed jQuery dependency
+ *   - Removed directionX/directionY, defaults to center/center
+ */
+;(function(window, document) {
+	'use strict';
+	var pluginName = 'particleground';
 
-	var width, height, cover, canvas, ctx, points, target, animateHeader = true;
-
-	// Main
-	initHeader();
-	initAnimation();
-	addListeners();
-
-	function initHeader() {
-		cover = document.getElementById('cover');
-		canvas = document.getElementById('cover-bg');
-
-		resize();
-		
-		target = {
-			x: width/2,
-			y: height/2
-		};
-		ctx = canvas.getContext('2d');
-
-		// Create points
-		points = [];
-		for (var x = 0; x < width; x = x + width / 20) {
-			for (var y = 0; y < height; y = y + height / 20) {
-				var px = x + Math.random() * width / 20;
-				var py = y + Math.random() * height / 20;
-				var p = {
-					x: px, originX: px,
-					y: py, originY: py
-				};
-				points.push(p);
+	// http://youmightnotneedjquery.com/#deep_extend
+	function extend(out) {
+		out = out || {};
+		for (var i = 1; i < arguments.length; i++) {
+			var obj = arguments[i];
+			if (!obj) {
+				continue;
 			}
-		}
-
-		// For each point find the 5 closest points
-		for (var i = 0; i < points.length; i++) {
-			var closest = [];
-			var p1 = points[i];
-			for (var j = 0; j < points.length; j++) {
-				var p2 = points[j]
-				if (!(p1 == p2)) {
-					var placed = false;
-					for (var k = 0; k < 5; k++) {
-						if (!placed) {
-							if (closest[k] == undefined) {
-								closest[k] = p2;
-								placed = true;
-							}
-						}
-					}
-					for (var k = 0; k < 5; k++) {
-						if (!placed) {
-							if (getDistance(p1, p2) < getDistance(p1, closest[k])) {
-								closest[k] = p2;
-								placed = true;
-							}
-						}
+			for (var key in obj) {
+				if (obj.hasOwnProperty(key)) {
+					if (typeof obj[key] === 'object') {
+						deepExtend(out[key], obj[key]);
+					} else {
+						out[key] = obj[key];
 					}
 				}
 			}
-			p1.closest = closest;
 		}
+		return out;
+	};
 
-		// Assign a circle to each point
-		for (var i in points) {
-			var c = new Circle(points[i], 2 + Math.random() * 2, 'rgba(255,255,255,0.3)');
-			points[i].circle = c;
-		}
-	}
+	function Plugin(element, options) {
+		var canvasSupport = !!document.createElement('canvas').getContext;
+		var canvas;
+		var ctx;
+		var particles = [];
+		var raf;
+		var mouseX = 0;
+		var mouseY = 0;
+		var winW;
+		var winH;
+		var desktop = !navigator.userAgent.match(/(iPhone|iPod|iPad|Android|BlackBerry|BB10|mobi|tablet|opera mini|nexus 7)/i);
+		var orientationSupport = !!window.DeviceOrientationEvent;
+		var tiltX = 0;
+		var tiltY = 0;
+		var pointerX;
+		var pointerY;
+		var paused = false;
 
-	// Event handling
-	function addListeners() {
-		if (!('ontouchstart' in window)) {
-			window.addEventListener('mousemove', mouseMove);
-		}
-		window.addEventListener('scroll', function() {
-			animateHeader = !(document.body.scrollTop > height + 50);
-		});
-		window.addEventListener('resize', resize);
-	}
+		options = extend({}, window[pluginName].defaults, options);
 
-	function mouseMove(e) {
-		var posx = posy = 0;
-		if (e.pageX || e.pageY) {
-			posx = e.pageX;
-			posy = e.pageY;
-		} else if (e.clientX || e.clientY) {
-			posx = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
-			posy = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
-		}
-		target.x = posx;
-		target.y = posy;
-	}
-
-	function resize() {
-		width = window.innerWidth;
-		height = cover.clientHeight;
-		canvas.width = width;
-		canvas.height = height;
-	}
-
-	// animation
-	function initAnimation() {
-		animate();
-		for (var i in points) {
-			shiftPoint(points[i]);
-		}
-	}
-
-	function animate() {
-		if (animateHeader) {
-			ctx.clearRect(0, 0, width, height);
-			for (var i in points) {
-				// Detect points in range
-				if (Math.abs(getDistance(target, points[i])) < 4000) {
-					points[i].active = 0.3;
-					points[i].circle.active = 0.6;
-				} else if (Math.abs(getDistance(target, points[i])) < 20000) {
-					points[i].active = 0.1;
-					points[i].circle.active = 0.3;
-				} else if (Math.abs(getDistance(target, points[i])) < 40000) {
-					points[i].active = 0.02;
-					points[i].circle.active = 0.1;
-				} else {
-					points[i].active = 0;
-					points[i].circle.active = 0;
-				}
-				drawLines(points[i]);
-				points[i].circle.draw();
-			}
-		}
-		requestAnimationFrame(animate);
-	}
-
-	function shiftPoint(p) {
-		TweenLite.to(p, 1 + Math.random(), {
-			x: p.originX - 50 + Math.random() * 100,
-			y: p.originY - 50 + Math.random() * 100,
-			ease: Circ.easeInOut,
-			onComplete: function() {
-				shiftPoint(p);
-			}
-		});
-	}
-
-	// Canvas manipulation
-	function drawLines(p) {
-		if (!p.active) {
-			return;
-		}
-		for (var i in p.closest) {
-			ctx.beginPath();
-			ctx.moveTo(p.x, p.y);
-			ctx.lineTo(p.closest[i].x, p.closest[i].y);
-			ctx.strokeStyle = "rgba(156,217,249," + p.active + ")";
-			ctx.stroke();
-		}
-	}
-
-	function Circle(pos, rad, color) {
-		var _this = this;
-
-		// Constructor
-		(function() {
-			_this.pos = pos || null;
-			_this.radius = rad || null;
-			_this.color = color || null;
-		})();
-
-		this.draw = function() {
-			if (!_this.active) {
+		function init() {
+			if (!canvasSupport) {
 				return;
 			}
+
+			// Create canvas
+			canvas = document.createElement('canvas');
+			canvas.className = 'pg-canvas';
+			element.insertBefore(canvas, element.firstChild);
+			ctx = canvas.getContext('2d');
+			styleCanvas();
+
+			// Create particles
+			var numParticles = Math.round((canvas.width * canvas.height) / options.density);
+			for (var i = 0; i < numParticles; i++) {
+				var p = new Particle();
+				p.setStackPos(i);
+				particles.push(p);
+			};
+
+			window.addEventListener('resize', function() {
+				resizeHandler();
+			}, false);
+
+			document.addEventListener('mousemove', function(e) {
+				mouseX = e.pageX;
+				mouseY = e.pageY;
+			}, false);
+
+			if (orientationSupport && !desktop) {
+				window.addEventListener('deviceorientation', function() {
+					// Constrain tilt range to [-30,30]
+					tiltY = Math.min(Math.max(-event.beta, -30), 30);
+					tiltX = Math.min(Math.max(-event.gamma, -30), 30);
+				}, true);
+			}
+
+			draw();
+			hook('onInit');
+		}
+
+		function styleCanvas() {
+			canvas.width = element.offsetWidth;
+			canvas.height = element.offsetHeight;
+			ctx.fillStyle = options.dotColor;
+			ctx.strokeStyle = options.lineColor;
+			ctx.lineWidth = options.lineWidth;
+		}
+
+		function draw() {
+			if (!canvasSupport) {
+				return;
+			}
+
+			winW = window.innerWidth;
+			winH = window.innerHeight;
+
+			ctx.clearRect(0, 0, canvas.width, canvas.height);
+			for (var i = 0; i < particles.length; i++) {
+				particles[i].updatePosition();
+			}
+			for (var i = 0; i < particles.length; i++) {
+				particles[i].draw();
+			}
+			// Call this function next time screen is redrawn
+			if (!paused) {
+				raf = requestAnimationFrame(draw);
+			}
+		}
+
+		/**
+		 * Add/remove particles when screen is resized
+		 */
+		function resizeHandler() {
+			styleCanvas();
+
+			var elWidth = element.offsetWidth;
+			var elHeight = element.offsetHeight;
+
+			// Remove particles that are outside the canvas
+			for (var i = particles.length - 1; i >= 0; i--) {
+				if (particles[i].position.x > elWidth || particles[i].position.y > elHeight) {
+					particles.splice(i, 1);
+				}
+			};
+			// Adjust particle density
+			var numParticles = Math.round((canvas.width * canvas.height) / options.density);
+			if (numParticles > particles.length) {
+				while (numParticles > particles.length) {
+					var p = new Particle();
+					particles.push(p);
+				}
+			} else if (numParticles < particles.length) {
+				particles.splice(numParticles);
+			}
+			// Re-index particles
+			for (i = particles.length - 1; i >= 0; i--) {
+				particles[i].setStackPos(i);
+			}
+		}
+
+		function pause() {
+			paused = true;
+		}
+
+		function start() {
+			paused = false;
+			draw();
+		}
+
+		function Particle() {
+			this.stackPos;
+			this.active = true;
+			this.layer = Math.ceil(Math.random() * 3);
+			this.parallaxOffsetX = 0;
+			this.parallaxOffsetY = 0;
+			// Initial particle position
+			this.position = {
+				x: Math.ceil(Math.random() * canvas.width),
+				y: Math.ceil(Math.random() * canvas.height)
+			};
+			// Random particle speed, within min and max values
+			this.speed = {};
+			this.speed.x = +((-options.maxSpeedX / 2) + (Math.random() * options.maxSpeedX)).toFixed(2);
+			this.speed.x += this.speed.x > 0 ? options.minSpeedX : -options.minSpeedX;
+			this.speed.y = +((-options.maxSpeedY / 2) + (Math.random() * options.maxSpeedY)).toFixed(2);
+			this.speed.x += this.speed.y > 0 ? options.minSpeedY : -options.minSpeedY;
+		}
+
+		Particle.prototype.draw = function() {
+			// Draw circle
 			ctx.beginPath();
-			ctx.arc(_this.pos.x, _this.pos.y, _this.radius, 0, 2 * Math.PI, false);
-			ctx.fillStyle = "rgba(156,217,249," + _this.active + ")";
+			ctx.arc(this.position.x + this.parallaxOffsetX, this.position.y + this.parallaxOffsetY, options.particleRadius / 2, 0, Math.PI * 2, true);
+			ctx.closePath();
 			ctx.fill();
+
+			// Draw lines
+			ctx.beginPath();
+			// Iterate over all particles which are higher in the stack than this one
+			for (var i = particles.length - 1; i > this.stackPos; i--) {
+				var p2 = particles[i];
+
+				// Pythagorus theorum to get distance between two points
+				var a = this.position.x - p2.position.x
+				var b = this.position.y - p2.position.y
+				var dist = Math.sqrt((a * a) + (b * b)).toFixed(2);
+
+				// If the two particles are in proximity, join them
+				if (dist < options.proximity) {
+					ctx.moveTo(this.position.x + this.parallaxOffsetX, this.position.y + this.parallaxOffsetY);
+					if (options.curvedLines) {
+						ctx.quadraticCurveTo(Math.max(p2.position.x, p2.position.x), Math.min(p2.position.y, p2.position.y), p2.position.x + p2.parallaxOffsetX, p2.position.y + p2.parallaxOffsetY);
+					} else {
+						ctx.lineTo(p2.position.x + p2.parallaxOffsetX, p2.position.y + p2.parallaxOffsetY);
+					}
+				}
+			}
+			ctx.stroke();
+			ctx.closePath();
+		}
+
+		Particle.prototype.updatePosition = function() {
+			if (options.parallax) {
+				if (orientationSupport && !desktop) {
+					// Map tiltX range [-30,30] to range [0,winW]
+					var ratioX = (winW - 0) / (30 - -30);
+					pointerX = (tiltX - -30) * ratioX + 0;
+					// Map tiltY range [-30,30] to range [0,winH]
+					var ratioY = (winH - 0) / (30 - -30);
+					pointerY = (tiltY - -30) * ratioY + 0;
+				} else {
+					pointerX = mouseX;
+					pointerY = mouseY;
+				}
+				// Calculate parallax offsets
+				this.parallaxTargX = (pointerX - (winW / 2)) / (options.parallaxMultiplier * this.layer);
+				this.parallaxOffsetX += (this.parallaxTargX - this.parallaxOffsetX) / 10; // Easing equation
+				this.parallaxTargY = (pointerY - (winH / 2)) / (options.parallaxMultiplier * this.layer);
+				this.parallaxOffsetY += (this.parallaxTargY - this.parallaxOffsetY) / 10; // Easing equation
+			}
+
+			var elWidth = element.offsetWidth;
+			var elHeight = element.offsetHeight;
+
+			// If particle has reached edge of canvas, reverse its direction
+			if (this.position.x + this.speed.x + this.parallaxOffsetX > elWidth || this.position.x + this.speed.x + this.parallaxOffsetX < 0) {
+				this.speed.x = -this.speed.x;
+			}
+			if (this.position.y + this.speed.y + this.parallaxOffsetY > elWidth || this.position.y + this.speed.y + this.parallaxOffsetY < 0) {
+				this.speed.y = -this.speed.y;
+			}
+
+			// Move particle
+			this.position.x += this.speed.x;
+			this.position.y += this.speed.y;
+		}
+
+		Particle.prototype.setStackPos = function(i) {
+			this.stackPos = i;
+		}
+
+		function option(key, val) {
+			if (val) {
+				options[key] = val;
+			} else {
+				return options[key];
+			}
+		}
+
+		function destroy() {
+			canvas.parentNode.removeChild(canvas);
+			hook('onDestroy');
+		}
+
+		function hook(hookName) {
+			if (options[hookName] !== undefined) {
+				options[hookName].call(element);
+			}
+		}
+
+		init();
+
+		return {
+			option: option,
+			destroy: destroy,
+			start: start,
+			pause: pause
 		};
 	}
 
-	// Util
-	function getDistance(p1, p2) {
-		return Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2);
-	}
-})();
+	window[pluginName] = function(elem, options) {
+		new Plugin(elem, options);
+	};
+
+	window[pluginName].defaults = {
+		minSpeedX: 0.1,
+		maxSpeedX: 0.7,
+		minSpeedY: 0.1,
+		maxSpeedY: 0.7,
+		density: 10000, // How many particles will be generated: one particle every n pixels
+		dotColor: '#666666',
+		lineColor: '#666666',
+		particleRadius: 7, // Dot size
+		lineWidth: 1,
+		curvedLines: false,
+		proximity: 100, // How close two dots need to be before they join
+		parallax: true,
+		parallaxMultiplier: 5, // The lower the number, the more extreme the parallax effect
+		onInit: function() {},
+		onDestroy: function() {}
+	};
+})(window, document);
+
+document.addEventListener('DOMContentLoaded', function() {
+	particleground(document.getElementById('cover'), {
+		dotColor: '#073642',
+		lineColor: '#073642',
+		density: 5000
+	});
+}, false);

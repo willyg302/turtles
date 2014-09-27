@@ -48,8 +48,6 @@ var paths = {
 			'./app/js/app.js'
 		],
 		'cover.js': [
-			'./tmp/TweenLite.min.js',
-			'./tmp/EasePack.min.js',
 			'./tmp/rAF.js',
 			'./app/js/cover.js'
 		]
@@ -58,8 +56,6 @@ var paths = {
 	downloads: [
 		'http://yandex.st/highlightjs/8.0/styles/tomorrow.min.css',
 		'http://yandex.st/highlightjs/8.0/highlight.min.js',
-		'http://cdnjs.cloudflare.com/ajax/libs/gsap/latest/TweenLite.min.js',
-		'http://cdnjs.cloudflare.com/ajax/libs/gsap/latest/easing/EasePack.min.js',
 		'https://gist.githubusercontent.com/paulirish/1579671/raw/3d42a3a76ed09890434a07be2212f376959e616f/rAF.js'
 	]
 };
