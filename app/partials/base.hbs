@@ -39,10 +39,10 @@
 				{{{ shim }}}
 				<p class="booknav">
 					{{#if previous}}
-						<a href="{{ previous.url }}" class="btn btn-default" role="button">&larr; Previous</a>
+						<a href="{{ previous.url }}" title="{{ previous.name }}" class="btn btn-default" role="button">&larr; Previous</a>
 					{{/if}}
 					{{#if next}}
-						<a href="{{ next.url }}" class="btn btn-primary pull-right" role="button">Next &rarr;</a>
+						<a href="{{ next.url }}" title="{{ next.name }}" class="btn btn-primary pull-right" role="button">Next &rarr;</a>
 					{{/if}}
 				</p>
 				{{> partials/footer }}
